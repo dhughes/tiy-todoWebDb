@@ -1,9 +1,12 @@
 
+import org.h2.tools.Server;
 import spark.ModelAndView;
 import spark.Spark;
 import spark.template.mustache.MustacheTemplateEngine;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -14,12 +17,23 @@ import static spark.Spark.halt;
  */
 public class Main {
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws SQLException {
+        // create a server
+        //Server server = Server.createWebServer().start();
+        Server server = Server.createTcpServer("-baseDir", "./data").start();
+
         // create our connection
-        Connection connection; // todo finish this
+        //Connection connection = DriverManager.getConnection("jdbc:h2:./data/todo");
+        String jdbcUrl = "jdbc:h2:" + server.getURL() + "/main";
+        System.out.println("jdbc url: " + jdbcUrl);
+        Connection connection = DriverManager.getConnection("jdbc:h2:" + server.getURL() + "/main", "", null);
+
 
         // create our service
-        TodoService todoService = null; // todo finish this
+        TodoService todoService = new TodoService(connection);
+
+        // init database
+        todoService.initDatabase();
 
         Spark.get(
                 "/",
@@ -75,7 +89,7 @@ public class Main {
                 (request, response) -> {
 
                     // delete the todo
-                    todoService.getTodo(Integer.valueOf(request.queryParams("id")));
+                    todoService.deleteTodo(Integer.valueOf(request.queryParams("id")));
 
                     response.redirect("/");
                     halt();

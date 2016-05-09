@@ -20,6 +20,7 @@
         {{#todos}}
             <tr>
                 <td>{{name}}</td>
+                <td>{{done}}</td>
                 <td>
                     {{^done}}
                         <a href="/update-todo?id={{id}}&done=true">Mark as done</a>
@@ -27,9 +28,8 @@
                     {{#done}}
                         <a href="/update-todo?id={{id}}&done=false">Mark as NOT done</a>
                     {{/done}}
-                </td>
-                <td>
-                    <a href="/delete-todo">Delete</a>
+                    |
+                    <a href="/delete-todo?id={{id}}">Delete</a>
                 </td>
             </tr>
         {{/todos}}
