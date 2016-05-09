@@ -1,0 +1,40 @@
+<html>
+<body>
+
+<form action="/create-todo" method="post">
+    <input type="text" name="name" value="{{name}}" />
+    <button>Add Todo</button>
+</form>
+
+{{^hasTodos}}
+    <p>You have no todos!</p>
+{{/hasTodos}}
+
+{{#hasTodos}}
+    <table border="1">
+        <tr>
+            <th>Todo</th>
+            <th>Done?</th>
+            <th>Delete?</th>
+        </tr>
+        {{#todos}}
+            <tr>
+                <td>{{name}}</td>
+                <td>
+                    {{^done}}
+                        <a href="/update-todo?id={{id}}&done=true">Mark as done</a>
+                    {{/done}}
+                    {{#done}}
+                        <a href="/update-todo?id={{id}}&done=false">Mark as NOT done</a>
+                    {{/done}}
+                </td>
+                <td>
+                    <a href="/delete-todo">Delete</a>
+                </td>
+            </tr>
+        {{/todos}}
+    </table>
+{{/hasTodos}}
+
+</body>
+</html>
